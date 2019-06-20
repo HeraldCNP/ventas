@@ -13,12 +13,14 @@
          match: /^(([^<>()\[\]\.,;:\s @\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
      },
      password: String,
-
+     phone: Number,
+     address: String,
      register_day: {
          type: Date,
          default: Date.now()
      },
      userType: String
  });
+
  const users = mongoose.model('Users', usersSchema);
  module.exports = users;
