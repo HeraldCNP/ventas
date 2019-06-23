@@ -3,6 +3,8 @@
  const Router = express.Router();
 
 
+
+
  Router.get('/', ProductCtrl.index) //api.com/product/
  Router.post('/', ProductCtrl.create) //api.com/product/
  Router.get('/:key/:value') //api.com/product/

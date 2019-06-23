@@ -14,14 +14,11 @@ function show(req, res) {
 
 }
 
-function create(req, res) {
+async function create(req, res) {
     var params = req.body;
     var product = new Product(params);
-    product.save().then(() => {
-        res.status(200).json({
-            msn: "Producto Creado"
-        })
-    });
+    var result = await product.save();
+    res.status(200).json(result);
 }
 
 function update(req, res) {
