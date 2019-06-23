@@ -1,16 +1,16 @@
  const mongoose = require("../connect");
 
 
- const usersSchema = Schema({
-     name: {
-         firstName: String,
-         lastName: String,
-         required: [true, 'Debe ingresar un nombre y apellidos']
-     },
+ const usersSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        unique: true,
+        required: true
+    },
+
      email: {
          type: String,
-         required: 'Falta el Email',
-         match: /^(([^<>()\[\]\.,;:\s @\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+         required: true
      },
      password: String,
      phone: Number,
@@ -22,5 +22,5 @@
      userType: String
  });
 
- const users = mongoose.model('Users', usersSchema);
+ const users = mongoose.model('Users', usersSchema); //modelo
  module.exports = users;
