@@ -2,24 +2,18 @@
 
 
  const usersSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        unique: true,
-        required: true
-    },
-
-     email: {
-         type: String,
-         required: true
-     },
+     nombre: String,
+     email: String,
      password: String,
-     phone: Number,
-     address: String,
-     register_day: {
-         type: Date,
-         default: Date.now()
-     },
-     userType: String
+     fono: String,
+     // comprador:{
+     //   type:mongoose.Schema.Types.ObjectId,
+     //   ref:'comprador'
+     // },
+     // vendedor:{
+     //   type:mongoose.Schema.Types.ObjectId,
+     //   ref:'vendedor'
+     // }
  });
 
  const users = mongoose.model('Users', usersSchema); //modelo
