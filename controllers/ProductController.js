@@ -25,8 +25,15 @@ function update(req, res) {
 
 }
 
-function remove(req, res) {
-
+async function remove(req, res) {
+    if (req.query.id == null) {
+        res.status(300).json({
+            msn: "Error no existe el id"
+        });
+        return
+    }
+    var r = await User.remove({ _id: req.query.id });
+    res.staus(300).json(r);
 }
 
 module.exports = {
