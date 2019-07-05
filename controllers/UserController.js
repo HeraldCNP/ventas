@@ -1,8 +1,11 @@
-const User = require('../database/collections/user'); //guarda todo lo que esta en la conexion
+const user = require('../database/collections/user'); //guarda todo lo que esta en la conexion
+const User = user.model;
+const USERSCHEMA = user.schema;
+var valid = require("../utils/valid");
 const sha1 = require('sha1');
 const jwt = require('jsonwebtoken');
 
-function index(req, res) {
+async function index(req, res) {
     // User.find().exec((err, docs) => {
     //     if (docs.length > 0) {
     //         res.status(200).json(docs);
@@ -27,12 +30,12 @@ function index(req, res) {
             order = 1;
         }
     }
-    var skip = 10;
+    var skip = 0;
     if (params.skip != null) {
         skip = parseInt(params.skip);
     }
     0
-    User.find({}).limit(limit).sort({ _id: order }).skip(skip).exec((err, docs) => {
+    await User.find({}).limit(limit).sort({ _id: order }).skip(skip).exec((err, docs) => {
         res.status(200).json(docs);
     });
 }
@@ -44,39 +47,92 @@ function show(req, res) {
 async function create(req, res) {
     let datos = req.body;
     datos['password'] = sha1(datos['password']);
+    datos['registerDate'] = Date.now();
+
+
+    if (!valid.checkParams(USERSCHEMA, datos)) {
+        res.status(300).json({
+            msn: "Parametros Incorrectos"
+        });
+        return;
+    }
+
+    if (!valid.checkEmail(datos.email)) {
+        res.status(300).json({
+            msn: "Email Invalido"
+        });
+        return;
+    }
     let user = new User(datos);
     let result = await user.save();
     res.status(200).json(result);
     // res.status(200).json(result);
 }
 
-function modify(req, res) {
-    if (req.query.id == null) {
+async function modify(req, res) {
+    let datos = req.body;
+    var id = req.query.id;
+    console.log(id);
+    if (id == null) {
         res.status(300).json({
-            msn: "No existe el id"
+            msn: "Falta el id del usuario"
         });
         return;
     }
-    var id = req.query.id;
-    var params = req.body;
-    User.findOneAndUpdate({ _id: id }, params, (err, docs) => {
-        res.status(200).json(docs);
-    });
+
+    if (datos.email != null && !valid.checkEmail(datos.email)) {
+        res.status(300).json({
+            msn: "Email Invalido"
+        });
+        return;
+    }
+
+    var result = await User.findOneAndUpdate({ _id: id }, datos);
+    res.status(200).json(result);
 }
 
-function update(req, res) {
+async function update(req, res) {
+    let datos = req.body;
+    var id = req.query.id;
+    if (id == null) {
+        res.status(300).json({
+            msn: "Falta el id del usuario"
+        });
+        return;
+    }
+    datos['password'] = sha1(datos['password']);
+    datos['registerDate'] = Date.now();
 
+
+    if (!valid.checkParams(USERSCHEMA, datos)) {
+        res.status(300).json({
+            msn: "Parametros Incorrectos"
+        });
+        return;
+    }
+
+    if (!valid.checkEmail(datos.email)) {
+        res.status(300).json({
+            msn: "Email Invalido"
+        });
+        return;
+    }
+    delete datos.registerDate;
+    var result = await User.findOneAndUpdate({ _id: id }, datos);
+    res.status(200).json(result);
 }
 
 async function remove(req, res) {
-    if (req.query.id == null) {
+    var id = req.query.id;
+    console.log(id);
+    if (id == null) {
         res.status(300).json({
-            msn: "Error no existe el id"
+            msn: "Falta el id del usuario"
         });
-        return
+        return;
     }
-    var r = await User.remove({ _id: req.query.id });
-    res.staus(300).json(r);
+    var result = await User.remove({ _id: id });
+    res.status(200).json(result);
 }
 
 function login(req, res) {
@@ -122,5 +178,6 @@ module.exports = {
     create,
     update,
     remove,
+    modify,
     login
 }
