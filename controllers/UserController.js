@@ -5,7 +5,7 @@ var valid = require("../utils/valid");
 const sha1 = require('sha1');
 const jwt = require('jsonwebtoken');
 
-async function index(req, res) {
+async function index(req, res, next) {
     // User.find().exec((err, docs) => {
     //     if (docs.length > 0) {
     //         res.status(200).json(docs);
@@ -34,7 +34,7 @@ async function index(req, res) {
     if (params.skip != null) {
         skip = parseInt(params.skip);
     }
-    0
+
     await User.find({}).limit(limit).sort({ _id: order }).skip(skip).exec((err, docs) => {
         res.status(200).json(docs);
     });
@@ -135,6 +135,38 @@ async function remove(req, res) {
     res.status(200).json(result);
 }
 
+// async function login(req, res, next) {
+//     var datos = req.body;
+//     if (!valid.checkParams({ "email": String, "password": String }, datos)) {
+//         res.status(300).json({
+//             "msn": "Error parametros incorrectos"
+//         });
+//         return;
+//     }
+//     var hashpassword = sha1(datos.password);
+//     var docs = await User.find({ email: datos.email, password: hashpassword });
+//     if (docs.length == 0) {
+//         res.status(300).json({
+//             "msn": "Error Usuario no Registrado"
+//         });
+//         return;
+//     }
+//     if (docs.length == 1) {
+//         jwt.sign({ name: datos.email, password: hashpassword }, "MiClave", (err, token) => {
+//             if (err) {
+//                 res.status(300).json({
+//                     "msn": "Error dentro del servidor"
+//                 });
+//                 return;
+//             }
+//             res.status(200).json({ "token": token });
+//         });
+//         return;
+//     }
+
+// }
+
+
 function login(req, res) {
     User.find({
         email: req.body['email']
@@ -144,11 +176,11 @@ function login(req, res) {
             if (us['password'] == sha1(req.body['password'])) {
                 const token = jwt.sign({
                     email: us.email
-                }, process.env.JWT_KEY || 'miCLave', {
+                }, process.env.JWT_KEY || 'myPass', {
                     expiresIn: "2h"
                 });
                 res.status(200).json({
-                    message: token,
+                    token: token,
                     permiso: 'si'
                 });
             } else {
@@ -172,6 +204,26 @@ function login(req, res) {
     });
 }
 
+function verifyToken(req, res, next) {
+    var token = req.headers["authorization"];
+    if (token == null) {
+        res.status(300).json({
+            "msn": "Error no tienes acceso"
+        });
+        return;
+    }
+    jwt.verify(token, "myPass", (err, auth) => {
+        if (err) {
+            res.status(300).json({
+                "msn": "Token invalido"
+            });
+            return;
+        }
+        // res.status(200).json(auth);
+        // return;
+        next();
+    });
+}
 module.exports = {
     index,
     show,
@@ -179,5 +231,6 @@ module.exports = {
     update,
     remove,
     modify,
-    login
+    login,
+    verifyToken
 }
