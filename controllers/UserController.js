@@ -48,7 +48,7 @@ async function create(req, res) {
     let datos = req.body;
     datos['password'] = sha1(datos['password']);
     datos['registerDate'] = Date.now();
-
+    datos['roles'] = ["buyer"];
 
     if (!valid.checkParams(USERSCHEMA, datos)) {
         res.status(300).json({
@@ -124,7 +124,7 @@ async function update(req, res) {
 
 async function remove(req, res) {
     var id = req.query.id;
-    console.log(id);
+    // console.log(id);
     if (id == null) {
         res.status(300).json({
             msn: "Falta el id del usuario"
@@ -212,16 +212,37 @@ function verifyToken(req, res, next) {
         });
         return;
     }
-    jwt.verify(token, "myPass", (err, auth) => {
+    jwt.verify(token, "myPass", async(err, auth) => {
         if (err) {
             res.status(300).json({
                 "msn": "Token invalido"
             });
             return;
         }
-        // res.status(200).json(auth);
-        // return;
-        next();
+        var users = User.find({ email: auth.email });
+        console.log(email);
+        var roles = users[0].roles;
+        if (roles == null) {
+            res.status(300).json({
+                "msn": "No cuenta con permisos"
+            });
+            return;
+        }
+        /* Roles */
+        for (var i = 0; i < roles.length; i++) {
+            if (roles[1] == "buyer" && req["method"] == "GET" && req["url"].match(/\/user/g) != null) {
+                next();
+                return;
+            }
+            if (roles[1] == "seller" && req["method"] == "GET" && req["url"].match(/\/user/g) != null) {
+                next();
+                return;
+            }
+
+
+        }
+        res.status(200).json({ msn: "El usuario no cuenta con el permiso para este servicio" });
+
     });
 }
 module.exports = {

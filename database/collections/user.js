@@ -7,7 +7,8 @@
      password: String,
      fono: String,
      sex: String,
-     registerDate: Date
+     registerDate: Date,
+     roles: Array
          // comprador:{
          //   type:mongoose.Schema.Types.ObjectId,
          //   ref:'comprador'
