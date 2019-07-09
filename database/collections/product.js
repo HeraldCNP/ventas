@@ -18,7 +18,7 @@ const ProductSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['Hogar', 'Entretenimiento', 'Comercio', 'Electronica']
+        enum: ['Articulos', 'Viviendas', 'Coches', 'Ropa']
     },
     description: {
         type: String,
