@@ -6,6 +6,7 @@ const Router = express.Router();
 
 
 Router.get('/', UserController.verifyToken, UserController.index)
+    // Router.get('/', UserController.index)
 Router.post('/', UserController.create)
 Router.post('/login', UserController.login)
 Router.put('/', UserController.update)

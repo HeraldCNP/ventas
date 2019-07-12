@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 
 const storage = multer.diskStorage({
-    destination: function (res, file, cb) {
+    destination: function(res, file, cb) {
         try {
             fs.statSync('./public/uploads');
         } catch (e) {
@@ -14,32 +14,32 @@ const storage = multer.diskStorage({
         }
         cb(null, './public/uploads/');
     },
-    filename: (res, file, cb) =>{
+    filename: (res, file, cb) => {
         cb(null, 'IMG-' + Date.now() + path.extname(file.originalname))
     }
 })
 
 const upload = multer({
-  storage:storage
+    storage: storage
 });
 
 
-router.get('/',(req,res) =>{
-    Imagen.find().exec((err,result) =>{
+router.get('/', (req, res) => {
+    Imagen.find().exec((err, result) => {
         res.status(200).json(result);
     });
 });
 
-router.post('/',upload.single('img'),async(req,res) =>{
+router.post('/', upload.single('img'), async(req, res) => {
     console.log(req.file);
 
-    var datos ={
-      url:req.file['filename']
+    var datos = {
+        url: req.file['filename']
     }
     var d = new Imagen(datos);
     var result = await d.save();
     res.status(200).json({
-      message:result
+        message: result
     });
 });
 

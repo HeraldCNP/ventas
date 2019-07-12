@@ -1,9 +1,9 @@
 const mongoose = require('../connect');
 
-const image={
-  url:String
+const image = {
+    url: String
 };
 
-const imagemodel=mongoose.model('Image',image);
+const imagemodel = mongoose.model('Image', image);
 
-module.exports=imagemodel;
+module.exports = imagemodel;

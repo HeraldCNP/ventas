@@ -5,7 +5,7 @@ var valid = require("../utils/valid");
 const sha1 = require('sha1');
 const jwt = require('jsonwebtoken');
 
-async function index(req, res, next) {
+async function index(req, res) {
     // User.find().exec((err, docs) => {
     //     if (docs.length > 0) {
     //         res.status(200).json(docs);
@@ -72,23 +72,26 @@ async function create(req, res) {
 async function modify(req, res) {
     let datos = req.body;
     var id = req.query.id;
-    console.log(id);
+    // console.log(id);
     if (id == null) {
         res.status(300).json({
             msn: "Falta el id del usuario"
         });
         return;
     }
-
+    console.log(datos.password);
     if (datos.email != null && !valid.checkEmail(datos.email)) {
         res.status(300).json({
             msn: "Email Invalido"
         });
         return;
     }
-
+    if (datos.password != null) {
+        datos['password'] = sha1(datos['password']);
+    }
     var result = await User.findOneAndUpdate({ _id: id }, datos);
     res.status(200).json(result);
+
 }
 
 async function update(req, res) {
@@ -204,7 +207,7 @@ function login(req, res) {
     });
 }
 
-function verifyToken(req, res, next) {
+async function verifyToken(req, res, next) {
     var token = req.headers["authorization"];
     if (token == null) {
         res.status(300).json({
@@ -219,22 +222,24 @@ function verifyToken(req, res, next) {
             });
             return;
         }
-        var users = User.find({ email: auth.email });
-        console.log(email);
+        var users = await User.find({ email: auth.email });
+        // console.log(users);
+
         var roles = users[0].roles;
+        console.log(roles[0]);
         if (roles == null) {
             res.status(300).json({
                 "msn": "No cuenta con permisos"
             });
             return;
         }
-        /* Roles */
+
         for (var i = 0; i < roles.length; i++) {
-            if (roles[1] == "buyer" && req["method"] == "GET" && req["url"].match(/\/user/g) != null) {
+            if (roles[0] == "buyer" && req["method"] == "GET") {
                 next();
                 return;
             }
-            if (roles[1] == "seller" && req["method"] == "GET" && req["url"].match(/\/user/g) != null) {
+            if (roles[0] == "seller" && req["method"] == "GET") {
                 next();
                 return;
             }
