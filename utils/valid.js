@@ -3,7 +3,8 @@ var valid = {
 
         var a = Object.keys(evalueObj).sort().toString();
         var b = Object.keys(refObj["obj"]).sort().toString();
-        console.log(b);
+        // console.log(a);
+        // console.log(b);
         if (a == b) {
             return true;
         }

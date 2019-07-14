@@ -9,39 +9,39 @@ var verifyToken = rols.verifyToken;
 
 
 
-async function index(req, res) {
-    // User.find().exec((err, docs) => {
-    //     if (docs.length > 0) {
-    //         res.status(200).json(docs);
-    //     } else {
-    //         res.status(200).json({
-    //             message: 'no existen usuarios en la bd'
-    //         });
-    //     }
-    // });
+function index(req, res) {
+    User.find().exec(async(err, docs) => {
+        if (docs.length > 0) {
+            var params = req.query;
+            var limit = 100;
+            if (params.limit != null) {
+                limit = parseInt(params.limit);
+            }
 
-    var params = req.query;
-    var limit = 100;
-    if (params.limit != null) {
-        limit = parseInt(params.limit);
-    }
+            var order = -1;
+            if (params.order != null) {
+                if (params.order == 'desc') {
+                    order = -1;
+                } else if (params.order == "asc") {
+                    order = 1;
+                }
+            }
+            var skip = 0;
+            if (params.skip != null) {
+                skip = parseInt(params.skip);
+            }
 
-    var order = -1;
-    if (params.order != null) {
-        if (params.order == 'desc') {
-            order = -1;
-        } else if (params.order == "asc") {
-            order = 1;
+            await User.find({}).limit(limit).sort({ _id: order }).skip(skip).exec((err, docs) => {
+                res.status(200).json(docs);
+            });
+        } else {
+            res.status(200).json({
+                message: 'no existen usuarios en la bd'
+            });
         }
-    }
-    var skip = 0;
-    if (params.skip != null) {
-        skip = parseInt(params.skip);
-    }
-
-    await User.find({}).limit(limit).sort({ _id: order }).skip(skip).exec((err, docs) => {
-        res.status(200).json(docs);
     });
+
+
 }
 
 function show(req, res) {

@@ -18,7 +18,7 @@ const ProductSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['Articulos', 'Viviendas', 'Coches', 'Ropa']
+        enum: ['Articulos', 'Viviendas', 'Vehiculos', 'Propiedades', 'Electronica', 'Telefonos', 'Hogar', 'Deportes', 'Moda', 'Niños', 'Musica', 'Animales', 'Herramientas', 'Trabajo', 'Servicios']
     },
     description: {
         type: String,
@@ -29,11 +29,14 @@ const ProductSchema = new mongoose.Schema({
         default: 10
     },
     date: {
-        type: Date,
-        default: Date.now()
+        type: Date
+    },
+    status: {
+        type: String
     }
 });
 
+
 const Product = mongoose.model('Product', ProductSchema);
 
-module.exports = Product;
+module.exports = { model: Product, schema: ProductSchema };
