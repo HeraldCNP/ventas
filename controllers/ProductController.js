@@ -38,21 +38,20 @@ function index(req, res) {
 
 }
 
-function show(req, res) {
 
-}
 
 async function create(req, res) {
-    // var params = req.body;
-    // var product = new Product(params);
-    // var result = await product.save();
-    // res.status(200).json(result);
+
 
     let datos = req.body;
     datos['date'] = Date.now();
     datos['status'] = "active";
     // console.log(PRODUCTSCHEMA["obj"]);
     // console.log(datos);
+
+    if (!datos.stock) {
+        datos['stock'] = 1;
+    }
     if (!valid.checkParams(PRODUCTSCHEMA, datos)) {
         res.status(300).json({
             msn: "Parametros Incorrectos"
@@ -60,19 +59,54 @@ async function create(req, res) {
         return;
     }
 
-    // if (!valid.checkEmail(datos.email)) {
-    //     res.status(300).json({
-    //         msn: "Email Invalido"
-    //     });
-    //     return;
-    // }
+
 
     let product = new Product(datos);
     let result = await product.save();
     res.status(200).json(result);
 }
 
-function update(req, res) {
+async function update(req, res) {
+    let datos = req.body;
+    var id = req.query.id;
+    if (id == null) {
+        res.status(300).json({
+            msn: "Falta el id del usuario"
+        });
+        return;
+    }
+    datos['status'] = "active";
+    datos['date'] = Date.now();
+    if (!datos.stock) {
+        datos['stock'] = 1;
+    }
+
+    if (!valid.checkParams(PRODUCTSCHEMA, datos)) {
+        res.status(300).json({
+            msn: "Parametros Incorrectos"
+        });
+        return;
+    }
+
+    delete datos.status;
+    var result = await Product.findOneAndUpdate({ _id: id }, datos);
+    res.status(200).json(result);
+}
+
+async function modify(req, res) {
+    let datos = req.body;
+    var id = req.query.id;
+    // console.log(id);
+    if (id == null) {
+        res.status(300).json({
+            msn: "Falta el id del producto"
+        });
+        return;
+    }
+    console.log(datos.name);
+
+    var result = await Product.findOneAndModify({ _id: id }, datos);
+    res.status(200).json(result);
 
 }
 
@@ -81,10 +115,39 @@ async function remove(req, res) {
         res.status(300).json({
             msn: "Error no existe el id"
         });
-        return
+        return;
     }
-    var r = await User.remove({ _id: req.query.id });
-    res.staus(300).json(r);
+    var r = await Product.remove({ _id: req.query.id });
+    res.status(300).json(r);
+}
+
+function show(req, res) {
+    if (req.body.error) {
+        return res.status(500).send({ error });
+    }
+    if (!req.body.products) {
+        return res.status(404).send({ msg: "Not Found" });
+    }
+    let products = req.body.products;
+    return res.status(200).send({ products });
+
+}
+
+function find(req, res, next) {
+    let query = {};
+    query[req.params.key] = req.params.value;
+    Product.find(query).then(products => {
+        if (!products.length) {
+            return next();
+        } else {
+            req.body.products = products;
+            return next();
+        }
+    }).catch(error => {
+        req.body.error = error;
+        next();
+    })
+
 }
 
 module.exports = {
@@ -92,5 +155,7 @@ module.exports = {
     show,
     create,
     update,
-    remove
+    remove,
+    modify,
+    find
 }

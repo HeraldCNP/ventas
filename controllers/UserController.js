@@ -83,7 +83,7 @@ async function modify(req, res) {
         });
         return;
     }
-    console.log(datos.password);
+    // console.log(datos.password);
     if (datos.email != null && !valid.checkEmail(datos.email)) {
         res.status(300).json({
             msn: "Email Invalido"
@@ -93,7 +93,7 @@ async function modify(req, res) {
     if (datos.password != null) {
         datos['password'] = sha1(datos['password']);
     }
-    var result = await User.findOneAndUpdate({ _id: id }, datos);
+    var result = await User.findOneAndModify({ _id: id }, datos);
     res.status(200).json(result);
 
 }

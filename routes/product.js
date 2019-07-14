@@ -7,8 +7,9 @@
 
  Router.get('/', ProductController.index) //api.com/product/
  Router.post('/', ProductController.create) //api.com/product/
- Router.get('/:key/:value') //api.com/product/
- Router.put('/:key/:value') //api.com/product/
- Router.delete('/product', ProductController.remove) //api.com/product/
+ Router.patch('/', ProductController.modify)
+ Router.get('/:key/:value', ProductController.find, ProductController.show) //api.com/product/category/Hogar
+ Router.put('/', ProductController.update)
+ Router.delete('/', ProductController.remove) //api.com/product/
 
  module.exports = Router;
