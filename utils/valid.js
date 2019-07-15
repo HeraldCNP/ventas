@@ -17,6 +17,20 @@ var valid = {
             return false;
         }
         return true;
+    },
+    // checkPassword: function(pass) {
+    //     let exp = /^[a-z0-9_-]{6,18}$/g;
+    //     if (pass.match(exp) == null) {
+    //         return false;
+    //     }
+    //     return true;
+    // },
+    checkNumber: function(number) {
+        var exp = /^\d+$/g;
+        if (number.match(exp) == null) {
+            return false;
+        }
+        return true;
     }
 };
 
