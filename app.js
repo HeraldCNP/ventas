@@ -3,11 +3,14 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var http = require('http');
 
 var indexRouter = require('./routes/index');
 var productRouter = require('./routes/product');
 var userRouter = require('./routes/user');
 var imageRouter = require('./routes/image');
+var mensajeRouter = require('./routes/mensaje');
+
 
 var app = express();
 
@@ -25,6 +28,7 @@ app.use('/v1.0/ventas', indexRouter);
 app.use('/v1.0/ventas/product', productRouter);
 app.use('/v1.0/ventas/user', userRouter);
 app.use('/v1.0/ventas/image', imageRouter);
+app.use('/v1.0/ventas/mensaje',mensajeRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -42,11 +46,16 @@ app.use(function(err, req, res, next) {
     res.render('error');
 });
 
-/*Crear un puerto donde funcionara el API*/
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
+var chatIoMethods = require('./routes/chat');
+
+io.on('connection',chatIoMethods);
+
+//puerto
 const port = 8000;
-app.listen(port, () => {
-    console.log("Servidor corriendo en el puerto " + port);
+server.listen(port, () => {
+    console.log("corriendo en el puerto " + port);
 });
-/*END*/
 
 module.exports = app;
