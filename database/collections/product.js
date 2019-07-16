@@ -4,7 +4,6 @@ const ProductSchema = new mongoose.Schema({
     user: {
         type: String
     },
-
     name: {
         type: String,
         unique: true,
@@ -17,8 +16,8 @@ const ProductSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['Articulos', 'Vivienda', 'Coches', 'Ropa'],
-        //enum: ['Articulos', 'Vivienda', 'Vehiculos', 'Propiedades', 'Electronica', 'Telefonos', 'Hogar', 'Deportes', 'Moda', 'Niños', 'Musica', 'Animales', 'Herramientas', 'Trabajo', 'Servicios']
+        enum: ['Articulos', 'Viviendas', 'Vehiculos', 'Electronica', 'Telefonos', 'Herramientas', 'Trabajo', 'Servicios'],
+        //enum: ['Articulos', 'Viviendas', 'Vehiculos', 'Propiedades', 'Electronica', 'Telefonos', 'Hogar', 'Deportes', 'Moda', 'Niños', 'Musica', 'Animales', 'Herramientas', 'Trabajo', 'Servicios'],
     },
     description: {
         type: String,
