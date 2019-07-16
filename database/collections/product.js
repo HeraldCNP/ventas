@@ -1,10 +1,9 @@
 const mongoose = require("../connect");
 
 const ProductSchema = new mongoose.Schema({
-    // user: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "Users"
-    // },
+    user: {
+        type: String
+    },
 
     name: {
         type: String,
