@@ -18,7 +18,8 @@ const ProductSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['Articulos', 'Viviendas', 'Vehiculos', 'Propiedades', 'Electronica', 'Telefonos', 'Hogar', 'Deportes', 'Moda', 'Niños', 'Musica', 'Animales', 'Herramientas', 'Trabajo', 'Servicios']
+        enum: ['Articulos', 'Vivienda', 'Coches', 'Ropa'],
+        //enum: ['Articulos', 'Vivienda', 'Vehiculos', 'Propiedades', 'Electronica', 'Telefonos', 'Hogar', 'Deportes', 'Moda', 'Niños', 'Musica', 'Animales', 'Herramientas', 'Trabajo', 'Servicios']
     },
     description: {
         type: String,
@@ -27,6 +28,10 @@ const ProductSchema = new mongoose.Schema({
     stock: {
         type: Number,
         default: 10
+    },
+    location: {
+        type: String,
+        required: true,
     },
     date: {
         type: Date
