@@ -1,6 +1,7 @@
 const user = require('../database/collections/user'); //guarda todo lo que esta en la conexion
 const User = user.model;
 const USERSCHEMA = user.schema;
+const Calificacion=require('../database/collections/calificacion');
 var valid = require("../utils/valid");
 const sha1 = require('sha1');
 const jwt = require('jsonwebtoken');
@@ -69,6 +70,18 @@ async function create(req, res) {
     }
     let user = new User(datos);
     let result = await user.save();
+
+    //crear calificacion
+    let calf={
+        calif:0,
+        comprador:result['_id'],
+        cant:0
+    };
+
+    console.log(calf);
+    let insCalf=new Calificacion(calf);
+    let resultCalf=await insCalf.save();
+
     res.status(200).json(result);
     // res.status(200).json(result);
 }

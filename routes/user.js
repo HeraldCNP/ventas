@@ -3,9 +3,9 @@ const UserController = require('../controllers/UserController');
 const Router = express.Router();
 
 
+//UserController.verifyToken
 
-
-Router.get('/', UserController.verifyToken, UserController.index)
+Router.get('/',  UserController.index)
     // Router.get('/', UserController.index)
 Router.post('/', UserController.create)
 Router.post('/login', UserController.login)

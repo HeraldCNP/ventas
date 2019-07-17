@@ -16,7 +16,7 @@
          // vendedor:{
          //   type:mongoose.Schema.Types.ObjectId,
          //   ref:'vendedor'
-         // } 
+         // }
  });
 
  const users = mongoose.model('Users', usersSchema); //modelo
