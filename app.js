@@ -11,6 +11,7 @@ var userRouter = require('./routes/user');
 var imageRouter = require('./routes/image');
 var mensajeRouter = require('./routes/mensaje');
 var calificacionRouter=require('./routes/calificacion');
+var agendaRouter=require('./routes/agenda');
 
 
 var app = express();
@@ -31,6 +32,8 @@ app.use('/v1.0/ventas/user', userRouter);
 app.use('/v1.0/ventas/image', imageRouter);
 app.use('/v1.0/ventas/mensaje',mensajeRouter);
 app.use('/calificacion',calificacionRouter);
+app.use('/agenda', agendaRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

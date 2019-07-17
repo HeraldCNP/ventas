@@ -1,5 +1,6 @@
 const user = require('../database/collections/user'); //guarda todo lo que esta en la conexion
 const User = user.model;
+const Agenda=require('../database/collections/agenda');
 const USERSCHEMA = user.schema;
 const Calificacion=require('../database/collections/calificacion');
 var valid = require("../utils/valid");
@@ -77,8 +78,14 @@ async function create(req, res) {
         comprador:result['_id'],
         cant:0
     };
+    //crear agenda
+    let agenda={
+      vendedor:result['_id']
+    };
+    let insAg=new Agenda(agenda);
+    await insAg.save();
 
-    console.log(calf);
+    //console.log(calf);
     let insCalf=new Calificacion(calf);
     let resultCalf=await insCalf.save();
 

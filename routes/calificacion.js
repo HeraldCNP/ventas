@@ -28,7 +28,8 @@ router.patch('/:id',(req,res)=>{
     }).exec((err,doc)=>{
       if(doc.length>0){
         let obj=doc[0];
-        obj['calif']+=calif;
+        //console.log(obj);
+        obj['calif']+=calf;
         obj['cant']=+1;
         Calificacion.findByIdAndUpdate(obj['_id'],obj).exec(()=>{
           res.json({
